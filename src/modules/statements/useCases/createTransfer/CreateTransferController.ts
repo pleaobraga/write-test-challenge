@@ -1,0 +1,3 @@
+class CreateTransferController {}
+
+export { CreateTransferController };
