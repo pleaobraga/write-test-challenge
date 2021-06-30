@@ -37,8 +37,6 @@ describe("Create User Controller", () => {
 
     const { token } = responseToken.body;
 
-    console.log("responseToken.body", responseToken.body);
-
     const resp = await request(app)
       .get("/api/v1/profile")
       .set({

@@ -12,9 +12,9 @@ describe("Show User Profile", () => {
   });
 
   it("should not show profile when user does not exists", async () => {
-    expect(async () => {
-      await showUserProfileUseCase.execute("1");
-    }).rejects.toBeInstanceOf(ShowUserProfileError);
+    await expect(showUserProfileUseCase.execute("1")).rejects.toEqual(
+      new ShowUserProfileError()
+    );
   });
 
   it("should show profile when user exists", async () => {

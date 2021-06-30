@@ -23,16 +23,16 @@ describe("Create Statement Use Case", () => {
   });
 
   it("should not be able to create a statement if user does not exist", async () => {
-    expect(async () => {
-      const props = {
-        user_id: "1",
-        type: OperationType.DEPOSIT,
-        amount: 20,
-        description: "test",
-      };
+    const props = {
+      user_id: "1",
+      type: OperationType.DEPOSIT,
+      amount: 20,
+      description: "test",
+    };
 
-      await createStatementUseCase.execute({ ...props });
-    }).rejects.toBeInstanceOf(CreateStatementError);
+    await expect(createStatementUseCase.execute({ ...props })).rejects.toEqual(
+      new CreateStatementError.UserNotFound()
+    );
   });
 
   it("should create statement", async () => {
@@ -56,30 +56,30 @@ describe("Create Statement Use Case", () => {
     expect(statement).toHaveProperty("id");
   });
 
-  it("should not be able to create a withdraw without money in account", () => {
-    expect(async () => {
-      const userProps = {
-        name: "user test",
-        email: "test@g.com",
-        password: "1234",
-      };
+  it("should not be able to create a withdraw without money in account", async () => {
+    const userProps = {
+      name: "user test",
+      email: "test@g.com",
+      password: "1234",
+    };
 
-      const user = await usersRepository.create({ ...userProps });
+    const user = await usersRepository.create({ ...userProps });
 
-      const props = {
-        user_id: user.id as string,
-        type: OperationType.DEPOSIT,
-        amount: 10,
-        description: "test",
-      };
+    const props = {
+      user_id: user.id as string,
+      type: OperationType.DEPOSIT,
+      amount: 10,
+      description: "test",
+    };
 
-      await createStatementUseCase.execute({ ...props });
+    await createStatementUseCase.execute({ ...props });
 
-      await createStatementUseCase.execute({
+    await expect(
+      createStatementUseCase.execute({
         ...props,
         type: OperationType.WITHDRAW,
         amount: 40,
-      });
-    }).rejects.toBeInstanceOf(CreateStatementError);
+      })
+    ).rejects.toEqual(new CreateStatementError.InsufficientFunds());
   });
 });

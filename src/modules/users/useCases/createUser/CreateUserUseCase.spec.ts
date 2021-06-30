@@ -12,17 +12,17 @@ describe("Create User", () => {
   });
 
   it("should not create new user when he is already exists", async () => {
-    expect(async () => {
-      const userProps = {
-        name: "name test",
-        email: "email@g.com",
-        password: "test",
-      };
+    const userProps = {
+      name: "name test",
+      email: "email@g.com",
+      password: "test",
+    };
 
-      await createUserUseCase.execute({ ...userProps });
+    await createUserUseCase.execute({ ...userProps });
 
-      await createUserUseCase.execute({ ...userProps });
-    }).rejects.toBeInstanceOf(CreateUserError);
+    expect(createUserUseCase.execute({ ...userProps })).rejects.toEqual(
+      new CreateUserError()
+    );
   });
 
   it("should create new user", async () => {

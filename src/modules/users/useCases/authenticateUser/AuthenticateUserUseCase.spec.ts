@@ -13,31 +13,30 @@ describe("Create User", () => {
   });
 
   it("should not authenticate user without correct email", async () => {
-    expect(async () => {
-      const userProps = {
-        email: "email@g.com",
-        password: "test",
-        name: "test pedro",
-      };
+    const userProps = {
+      email: "email@g.com",
+      password: "test",
+      name: "test pedro",
+    };
 
-      const user = await usersRepository.create({ ...userProps });
+    const user = await usersRepository.create({ ...userProps });
 
-      await authenticateUserUseCase.execute({ ...user, email: "1" });
-    }).rejects.toBeInstanceOf(IncorrectEmailOrPasswordError);
+    await expect(
+      authenticateUserUseCase.execute({ ...user, email: "1" })
+    ).rejects.toEqual(new IncorrectEmailOrPasswordError());
   });
 
   it("should not authenticate user without correct password", async () => {
-    expect(async () => {
-      const userProps = {
-        email: "email@g.com",
-        password: "test",
-        name: "test pedro",
-      };
+    const userProps = {
+      email: "email@g.com",
+      password: "test",
+      name: "test pedro",
+    };
 
-      const user = await usersRepository.create({ ...userProps });
-
-      await authenticateUserUseCase.execute({ ...user, password: "1" });
-    }).rejects.toBeInstanceOf(IncorrectEmailOrPasswordError);
+    const user = await usersRepository.create({ ...userProps });
+    await expect(
+      authenticateUserUseCase.execute({ ...user, password: "1" })
+    ).rejects.toEqual(new IncorrectEmailOrPasswordError());
   });
 
   it("should authenticate user", async () => {

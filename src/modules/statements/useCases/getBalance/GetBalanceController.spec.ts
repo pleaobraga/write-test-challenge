@@ -37,8 +37,6 @@ describe("Get Balance Controller", () => {
 
     const { token } = responseToken.body;
 
-    console.log("token", token);
-
     const resp = await request(app)
       .get("/api/v1/statements/balance")
       .set({

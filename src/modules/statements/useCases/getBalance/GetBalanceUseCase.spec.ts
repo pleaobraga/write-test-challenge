@@ -23,16 +23,16 @@ describe("Create Statement Use Case", () => {
   });
 
   it("should not be able to create a statement if user does not exist", async () => {
-    expect(async () => {
-      const props = {
-        user_id: "1",
-        type: OperationType.DEPOSIT,
-        amount: 20,
-        description: "test",
-      };
+    const props = {
+      user_id: "1",
+      type: OperationType.DEPOSIT,
+      amount: 20,
+      description: "test",
+    };
 
-      await getBalanceUseCase.execute({ ...props });
-    }).rejects.toBeInstanceOf(GetBalanceError);
+    await expect(getBalanceUseCase.execute({ ...props })).rejects.toEqual(
+      new GetBalanceError()
+    );
   });
 
   it("should create statement", async () => {
